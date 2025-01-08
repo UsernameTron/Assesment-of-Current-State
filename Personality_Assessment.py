@@ -125,9 +125,9 @@ def load_questions():
 
 # Sample quotes for demonstration
 quotes = [
-    "\"AI will continue to grow in 2025, but workplaces must accompany implementation with regular AI literacy.\" [1]",
-    "\"By 2025, AI governance can't be addressed in pockets—holistic strategy is key.\" [5]",
-    "\"Rigorous risk management practices for AI become nonnegotiable in fast-paced implementations.\" [5]",
+    "\"AI will continue to grow in 2025, but workplaces must accompany implementation with regular AI literacy.\" ",
+    "\"By 2025, AI governance can't be addressed in pockets—holistic strategy is key.\" ",
+    "\"Rigorous risk management practices for AI become nonnegotiable in fast-paced implementations.\" ",
     # ... You can add or remove more quotes as needed ...
 ]
 
