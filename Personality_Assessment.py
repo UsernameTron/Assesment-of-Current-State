@@ -2,10 +2,6 @@ import streamlit as st
 import pandas as pd
 import base64
 import random
-from io import BytesIO
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet
 
 st.set_page_config(
     page_title="AI & ML Readiness Assessment",
@@ -13,6 +9,7 @@ st.set_page_config(
     page_icon=":robot_face:"
 )
 
+# Minor style adjustments
 st.markdown(
     """
     <style>
@@ -38,10 +35,6 @@ st.markdown(
         border-radius: 4px;
         padding: 0.6rem 1.2rem;
     }
-    .quote-and-question {
-        margin: 0 !important; 
-        padding: 0 !important;
-    }
     .quote-box {
         background-color: #ffffff;
         border-left: 4px solid #007ACC;
@@ -58,7 +51,7 @@ st.markdown(
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         padding: 20px 25px 10px 25px;
         border-radius: 10px;
-        margin: 0 !important; 
+        margin: 0 !important;
     }
     .result-card {
         background-color: #FFFFFF;
@@ -130,79 +123,43 @@ def load_questions():
         },
     ]
 
+# Sample quotes for demonstration
 quotes = [
-    "\"AI will continue to grow in 2025, but workplaces must accompany implementation with regular AI literacy and fluency training.\" [1]",
-    "\"By 2025, company leaders will no longer have the luxury of addressing AI governance inconsistently or in pockets.\" [5]",
-    "\"Rigorous assessment and validation of AI risk management practices and controls will become nonnegotiable.\" [5]",
-    "\"Generative AI and AI-driven analytics are set to transform automated customer service by 2025.\" [4]",
-    "\"Small businesses can join in, using AI to create personalized customer service with less effort and wider reach.\" [4]",
-    "\"The countries with the highest robot density have among the lowest unemployment rates; it's about tech plus people.\" [6]",
-    "\"AI is sometimes incorrectly framed as machines replacing humans. It's about machines augmenting humans.\" [6]",
-    "\"Systematic, transparent approaches will be needed to confirm sustained value from AI investments.\" [5]",
-    "\"Integration with legacy systems can be as tricky as navigating a thorny patch, but it's essential.\" [3]",
+    "\"AI will continue to grow in 2025, but workplaces must accompany implementation with regular AI literacy.\" [1]",
+    "\"By 2025, AI governance can't be addressed in pockets—holistic strategy is key.\" [5]",
+    "\"Rigorous risk management practices for AI become nonnegotiable in fast-paced implementations.\" [5]",
+    # ... You can add or remove more quotes as needed ...
 ]
 
 snippets = [
-    "An AI strategist can help clarify goals to avoid wasted AI investments and ensure strategic alignment.",
-    "Vendor-agnostic approaches reduce licensing fees and hidden service charges across the organization.",
-    "Organizations strategically scaling AI report up to 3x the return compared to siloed implementations.",
-    "Customizing AI solutions from the start avoids the high cost of adapting off-the-shelf platforms.",
-    "Implementing solutions internally can save millions by eliminating ongoing licensing or user fees.",
-    "Alignment with internal data privacy standards mitigates compliance risks and unforeseen costs.",
-    "Regular AI assessments improve ROI by identifying new opportunities and preventing project stagnation.",
-    "Robust data pipelines can cut operational costs by up to 19% in supply chain optimization[5].",
-    "Internal training programs enable a self-sufficient AI culture, minimizing reliance on external vendors."
+    "An AI strategist clarifies goals and avoids wasted AI investments.",
+    "Vendor-agnostic approaches reduce licensing fees and hidden service charges.",
+    "Strategically scaling AI can yield up to 3x return over siloed implementations.",
+    "Custom solutions from the start reduce expensive modifications later.",
+    "Internal implementations can save millions by removing incremental user fees.",
+    # ... More snippet lines if desired ...
 ]
 
 def generate_insights(scores):
+    # Provide a simple narrative based on top and bottom categories
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    top_category, _ = sorted_scores[0]
-    bottom_category, _ = sorted_scores[-1]
+    top_cat, top_val = sorted_scores[0]
+    bottom_cat, bottom_val = sorted_scores[-1]
 
     insights = []
     insights.append(
-        f"Your organization shows the highest potential in **{top_category}**. "
-        "This suggests strengths that can be leveraged for larger AI initiatives, "
-        "such as focusing resources or pilot projects in this area first."
+        f"**Highest Potential:** {top_cat}.\n"
+        "This indicates an area where your organization can push forward with AI initiatives."
     )
     insights.append(
-        f"Meanwhile, **{bottom_category}** appears to have the greatest room for growth. "
-        "By addressing potential gaps here, your organization can create "
-        "a more balanced AI strategy with fewer blind spots."
+        f"**Greatest Room for Growth:** {bottom_cat}.\n"
+        "By focusing on this aspect, you can create a more balanced AI strategy."
     )
     insights.append(
-        "Consider using cross-functional teams to promote alignment among stakeholders, "
-        "and continuously revisit your strategy to ensure projects stay relevant."
-    )
-    insights.append(
-        "Encourage ongoing AI literacy programs, build strong data governance, "
-        "and track measurable outcomes—this will help you scale sustainably over time."
+        "Consider cross-functional teams, ongoing AI literacy, and robust data governance "
+        "to ensure sustainable AI adoption."
     )
     return "\n\n".join(insights)
-
-def generate_pdf_report(scores, insights):
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=letter)
-    styles = getSampleStyleSheet()
-    story = []
-
-    story.append(Paragraph("AI & ML Readiness Assessment Report", styles['Title']))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph("Overview of Findings:", styles['Heading2']))
-    story.append(Paragraph(
-        "Based on your responses, we've identified key areas that reflect how prepared your "
-        "organization may be for AI implementation. Below you'll find a qualitative assessment "
-        "of your organization's strongest aspects, along with areas that may require additional "
-        "focus or resources.",
-        styles['BodyText']
-    ))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph("Overall Insights and Recommendations:", styles['Heading2']))
-    story.append(Paragraph(insights, styles['BodyText']))
-
-    doc.build(story)
-    buffer.seek(0)
-    return buffer
 
 def on_response_change():
     if st.session_state.selected_option is not None:
@@ -229,23 +186,6 @@ def main():
             "organizational culture, and data readiness. Identify gaps and explore ways "
             "to align your initiatives with long-term goals."
         )
-        st.write(
-            "**Based on Proven Scientific Algorithms**\n\n"
-            "This assessment uses foundational principles similar to established behavioral and "
-            "organizational research, enhanced by Retrieval-Augmented Generation (RAG) and advanced "
-            "machine learning. By leveraging AI capabilities, organizations can develop custom strategic "
-            "personality assessments at a fraction of the typical market cost.\n\n"
-            "**ROI Potential**\n"
-            "- Elimination of per-assessment costs ($24-100 per person)\n"
-            "- Reduced training and development expenses\n"
-            "- Improved team productivity through better role alignment\n\n"
-            "**Core Pillars**\n"
-            "- Scientific validation\n"
-            "- Detailed reporting capabilities\n"
-            "- Integration with existing systems\n"
-            "- Reliable data collection methods\n"
-        )
-
         if st.button("Begin Assessment"):
             st.session_state.questions = load_questions()
             st.session_state.started = True
@@ -254,41 +194,38 @@ def main():
         q_index = st.session_state.current_question
         question_data = st.session_state.questions[q_index]
 
-        # Quote box
-        quote_text = quotes[q_index] if q_index < len(quotes) else random.choice(quotes)
-        st.markdown(f"<div class='quote-box'>{quote_text}</div>", unsafe_allow_html=True)
+        # Display the quote box (optional)
+        if q_index < len(quotes):
+            st.markdown(f"<div class='quote-box'>{quotes[q_index]}</div>", unsafe_allow_html=True)
 
-        # Directly display question in question-card
-        st.markdown(f'<div class="question-card">', unsafe_allow_html=True)
-        st.markdown(f'<div class="question-header">Question {q_index + 1}</div>', unsafe_allow_html=True)
+        # Display the question and snippet
+        st.markdown("<div class='question-card'>", unsafe_allow_html=True)
+        st.markdown(f"<div class='question-header'>Question {q_index + 1}</div>", unsafe_allow_html=True)
         st.write(question_data["question"])
-
         st.write(
             "Reflect on how this aspect of AI/ML readiness applies to your organization. "
             "Consider strategic goals, potential roadblocks, and the internal alignment of teams."
         )
-
         if q_index < len(snippets):
             st.markdown(f"**{snippets[q_index]}**")
 
         st.radio(
             "Select your response:",
-            [
-                "1 - Strongly Disagree",
-                "2 - Disagree",
-                "3 - Neutral",
-                "4 - Agree",
-                "5 - Strongly Agree"
-            ],
+            ["1 - Strongly Disagree", "2 - Disagree", "3 - Neutral", "4 - Agree", "5 - Strongly Agree"],
             key="selected_option",
             on_change=on_response_change
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     else:
+        # Final results
         st.markdown("## Assessment Completed!")
-        df_scores = pd.DataFrame({"Score": list(st.session_state.scores.values())},
-                                 index=st.session_state.scores.keys())
+        df_scores = pd.DataFrame(
+            {
+                "Score": list(st.session_state.scores.values())
+            },
+            index=st.session_state.scores.keys()
+        )
         st.markdown('<div class="result-card">', unsafe_allow_html=True)
         st.markdown('<div class="metrics-title">Overall Assessment Snapshot</div>', unsafe_allow_html=True)
         st.bar_chart(df_scores)
@@ -296,12 +233,9 @@ def main():
         insights_text = generate_insights(st.session_state.scores)
         st.markdown("### Comprehensive Insights and Recommendations:")
         st.markdown(insights_text)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        pdf = generate_pdf_report(st.session_state.scores, insights_text)
-        b64 = base64.b64encode(pdf.read()).decode()
-        href = f'<a href="data:application/octet-stream;base64,{b64}" download="AI_ML_Readiness_Report.pdf"><strong>Download PDF Report</strong></a>'
-        st.markdown(href, unsafe_allow_html=True)
+        # Optionally, remove PDF generation code entirely—no references to reportlab needed.
 
         if st.button("Restart Assessment"):
             for key in list(st.session_state.keys()):
